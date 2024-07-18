@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.e207.woojoobook.api.mail.VerificationMail;
+import com.e207.woojoobook.api.user.request.EmailCodeCreateRequest;
+import com.e207.woojoobook.api.user.request.UserCreateRequest;
+import com.e207.woojoobook.api.verification.request.VerificationMail;
 import com.e207.woojoobook.global.security.SecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

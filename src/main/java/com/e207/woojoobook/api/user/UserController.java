@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.e207.woojoobook.api.mail.VerificationMail;
+import com.e207.woojoobook.api.user.request.EmailCodeCreateRequest;
+import com.e207.woojoobook.api.user.request.UserCreateRequest;
+import com.e207.woojoobook.api.verification.request.VerificationMail;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
