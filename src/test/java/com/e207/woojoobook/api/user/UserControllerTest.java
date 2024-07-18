@@ -125,6 +125,20 @@ class UserControllerTest {
 		resultActions.andExpect(status().isOk());
 	}
 
+	@DisplayName("닉네임 중복 여부를 체크한다")
+	@Test
+	void checkDuplicateNickname_success() throws Exception {
+		// given
+		String nickname = "nickname";
+		given(this.userService.checkDuplicateNickname(any())).willReturn(true);
+
+		// when
+		ResultActions resultActions = this.mockMvc.perform(get("/users/nicknames/{nickname}", nickname));
+
+		// then
+		resultActions.andExpect(status().isOk());
+	}
+
 	private static UserCreateRequest createUserCreateRequest(String email, String password, String passwordConfirm,
 		String nickname) {
 		return UserCreateRequest.builder()
