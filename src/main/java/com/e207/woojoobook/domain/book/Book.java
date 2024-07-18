@@ -2,7 +2,6 @@ package com.e207.woojoobook.domain.book;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-@Table(name = "books")
 @Entity
 public class Book {
 	@Id

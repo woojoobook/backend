@@ -11,7 +11,6 @@ import com.e207.woojoobook.domain.user.User;
 
 @Getter
 @NoArgsConstructor
-@Table(name = "userbooks")
 @Entity
 public class Userbook {
 	@Id
