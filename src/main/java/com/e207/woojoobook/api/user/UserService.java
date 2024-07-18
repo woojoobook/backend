@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-
 	private final UserSlaveRepository userSlaveRepository;
 	private final UserMasterRepository userMasterRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -44,10 +43,6 @@ public class UserService {
 	@Transactional
 	public void sendMail(EmailCodeCreateRequest request) {
 		String email = request.getEmail();
-		if (userSlaveRepository.existsByEmail(email)) {
-			// TODO : 예외처리
-			throw new RuntimeException("사용할 수 없는 이메일입니다.");
-		}
 		String verificationCode = this.verificationService.createVerificationUser(email);
 
 		VerificationMail verificationMail = VerificationMail.builder()
@@ -56,5 +51,10 @@ public class UserService {
 			.build();
 
 		this.verificationService.send(verificationMail);
+	}
+
+	@Transactional(readOnly = true)
+	public boolean checkDuplicateEmail(String email) {
+		return this.userSlaveRepository.existsByEmail(email);
 	}
 }
