@@ -1,6 +1,7 @@
 package com.e207.woojoobook.api.user;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.e207.woojoobook.api.user.request.EmailCodeCreateRequest;
 import com.e207.woojoobook.api.user.request.UserCreateRequest;
@@ -42,10 +42,10 @@ class UserControllerTest {
 		String nickname = "nickname";
 		UserCreateRequest userCreateRequest = createUserCreateRequest(email, password, passwordConfirm, nickname);
 
-		doNothing().when(userService).join(any(UserCreateRequest.class));
+		doNothing().when(this.userService).join(any(UserCreateRequest.class));
 
 		// when
-		ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders.post("/users")
+		ResultActions resultActions = this.mockMvc.perform(post("/users")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(this.objectMapper.writeValueAsString(userCreateRequest)));
 
@@ -65,7 +65,7 @@ class UserControllerTest {
 		UserCreateRequest userCreateRequest = createUserCreateRequest(email, password, passwordConfirm, nickname);
 
 		// when
-		ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders.post("/users")
+		ResultActions resultActions = this.mockMvc.perform(post("/users")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(this.objectMapper.writeValueAsString(userCreateRequest)));
 
@@ -83,7 +83,7 @@ class UserControllerTest {
 		request.setEmail(email);
 
 		// when
-		ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders.post("/users/emails")
+		ResultActions resultActions = this.mockMvc.perform(post("/users/emails")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(this.objectMapper.writeValueAsString(request)));
 
@@ -103,9 +103,23 @@ class UserControllerTest {
 		given(this.userService.verifyEmail(any(VerificationMail.class))).willReturn(true);
 
 		// when
-		ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders.put("/users/emails")
+		ResultActions resultActions = this.mockMvc.perform(put("/users/emails")
 			.contentType(MediaType.APPLICATION_JSON)
-			.content(objectMapper.writeValueAsString(verificationMail)));
+			.content(this.objectMapper.writeValueAsString(verificationMail)));
+
+		// then
+		resultActions.andExpect(status().isOk());
+	}
+
+	@DisplayName("이메일 중복 여부를 체크한다")
+	@Test
+	void checkDuplicateEmail_success() throws Exception {
+		// given
+		String email = "test@test.com";
+		given(this.userService.checkDuplicateEmail(any())).willReturn(true);
+
+		// when
+		ResultActions resultActions = this.mockMvc.perform(get("/users/emails/{email}", email));
 
 		// then
 		resultActions.andExpect(status().isOk());
