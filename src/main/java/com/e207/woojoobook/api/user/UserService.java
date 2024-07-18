@@ -54,6 +54,11 @@ public class UserService {
 		return this.userSlaveRepository.existsByEmail(email);
 	}
 
+	@Transactional(readOnly = true)
+	public boolean checkDuplicateNickname(String nickname) {
+		return this.userSlaveRepository.existsByNickname(nickname);
+	}
+
 	// TODO : 예외처리
 	private void validateUserCreateRequest(UserCreateRequest userCreateRequest) {
 		UserVerification userVerification = this.verificationService.findByEmail(userCreateRequest.getEmail());
@@ -63,6 +68,10 @@ public class UserService {
 
 		if (checkDuplicateEmail(userCreateRequest.getEmail())) {
 			throw new RuntimeException("중복된 이메일은 허용되지 않습니다.");
+		}
+
+		if(checkDuplicateNickname(userCreateRequest.getNickname())) {
+			throw new RuntimeException("중복된 닉네임은 허용되지 않습니다.");
 		}
 	}
 }
