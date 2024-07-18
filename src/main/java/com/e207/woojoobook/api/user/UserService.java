@@ -24,11 +24,7 @@ public class UserService {
 
 	@Transactional
 	public void join(UserCreateRequest userCreateRequest) {
-		// TODO : 예외처리
-		UserVerification userVerification = this.verificationService.findByEmail(userCreateRequest.getEmail());
-		if (!userVerification.isVerified()) {
-			throw new RuntimeException("인증되지 않은 회원입니다.");
-		}
+		validateUserCreateRequest(userCreateRequest);
 
 		userCreateRequest.encode(this.passwordEncoder.encode(userCreateRequest.getPassword()));
 
@@ -56,5 +52,17 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public boolean checkDuplicateEmail(String email) {
 		return this.userSlaveRepository.existsByEmail(email);
+	}
+
+	// TODO : 예외처리
+	private void validateUserCreateRequest(UserCreateRequest userCreateRequest) {
+		UserVerification userVerification = this.verificationService.findByEmail(userCreateRequest.getEmail());
+		if (!userVerification.isVerified()) {
+			throw new RuntimeException("인증되지 않은 회원입니다.");
+		}
+
+		if (checkDuplicateEmail(userCreateRequest.getEmail())) {
+			throw new RuntimeException("중복된 이메일은 허용되지 않습니다.");
+		}
 	}
 }
