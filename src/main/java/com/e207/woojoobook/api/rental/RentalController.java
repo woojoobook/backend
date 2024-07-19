@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -17,5 +19,11 @@ public class RentalController {
 	@PostMapping("/userbooks/{userbooksId}/rentals/offer")
 	public ResponseEntity<?> createRentalOffer(@PathVariable("userbooksId") Long userbooksId) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.rentalService.rentalOffer(userbooksId));
+	}
+
+	@PutMapping("/rentals/offer/{offerId}")
+	public ResponseEntity<?> offerRespond(@PathVariable("offerId") Long offerId,
+		@RequestBody RentalOfferRespondRequest request) {
+		return ResponseEntity.ok().build();
 	}
 }
