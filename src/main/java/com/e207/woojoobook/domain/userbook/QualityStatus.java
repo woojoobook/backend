@@ -1,4 +1,4 @@
-package com.e207.woojoobook.domain.book;
+package com.e207.woojoobook.domain.userbook;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

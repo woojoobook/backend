@@ -1,4 +1,4 @@
-package com.e207.woojoobook.domain.book;
+package com.e207.woojoobook.domain.userbook;
 
 public enum TradeStatus {
 	RENTAL_AVAILABLE,
