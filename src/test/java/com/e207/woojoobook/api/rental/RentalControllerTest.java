@@ -10,13 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.e207.woojoobook.api.rental.response.RentalOfferResponse;
 import com.e207.woojoobook.domain.user.UserRepository;
 import com.e207.woojoobook.global.security.SecurityConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Import({SecurityConfig.class})
 @WebMvcTest(controllers = RentalController.class)
@@ -24,6 +27,8 @@ class RentalControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	@Autowired
+	ObjectMapper objectMapper;
 	@MockBean
 	private RentalService rentalService;
 	@MockBean
@@ -45,5 +50,22 @@ class RentalControllerTest {
 		// then
 		resultActions.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.rentalId").exists());
+	}
+
+	@WithMockUser
+	@DisplayName("회원이 도서 대여 신청에 대해 응답한다")
+	@Test
+	void respondRentalOffer() throws Exception {
+		// given
+		Long offerId = 1L;
+		boolean isApproved = true;
+
+		// when
+		ResultActions resultActions = this.mockMvc.perform(MockMvcRequestBuilders.put("/rentals/offer/{offerId}", offerId)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(new RentalOfferRespondRequest(isApproved))));
+
+		// then
+		resultActions.andExpect(status().isOk());
 	}
 }
