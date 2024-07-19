@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.e207.woojoobook.domain.user.User;
@@ -25,11 +26,11 @@ public class Userbook {
 
 	@ElementCollection(targetClass = RegisterType.class)
 	@Enumerated(EnumType.STRING)
-	private Set<RegisterType> registerType;
+	private Set<RegisterType> registerType = new HashSet<>();
 
 	@ElementCollection(targetClass = TradeStatus.class)
 	@Enumerated(EnumType.STRING)
-	private Set<TradeStatus> tradeStatus;
+	private Set<TradeStatus> tradeStatus = new HashSet<>();
 
 	@Enumerated(EnumType.STRING)
 	private QualityStatus qualityStatus;
@@ -43,5 +44,13 @@ public class Userbook {
 		this.registerType = registerType;
 		this.tradeStatus = tradeStatus;
 		this.qualityStatus = qualityStatus;
+	}
+
+	public void inactivate(){
+		this.tradeStatus.add(TradeStatus.UNAVAILABLE);
+	}
+
+	public boolean isAvailable() {
+		return !this.tradeStatus.contains(TradeStatus.UNAVAILABLE);
 	}
 }
